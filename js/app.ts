@@ -16,11 +16,12 @@ window.addEventListener("load", function () {
     //img = shuffle(img);
     // card
     let grid: HTMLElement = document.getElementById("grid") as HTMLElement;
-    img.forEach((e) => {
-        let card = buildCard(e);
-        grid.appendChild(card);
-    });
-    let cards: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("card") as HTMLCollectionOf<HTMLDivElement>;
+    let cards: Array<Card> = Array();
+    for(let i=0;i<img.length;i++) {
+        let cardWidget = buildCard(img[i], i);
+        cards.push(new Card(cardWidget))
+        grid.appendChild(cardWidget);
+    }
     // Timer
     let display: HTMLSpanElement = document.getElementById("display") as HTMLSpanElement;
     let timer: Timer = new Timer(display);
@@ -29,7 +30,7 @@ window.addEventListener("load", function () {
     let success: HTMLAudioElement = document.getElementById("success") as HTMLAudioElement;
     let sound = new Sound(flip, success);
     // failuresCount
-    let failuresDisplay: HTMLSpanElement = document.getElementById("failures") as HTMLSpanElement;
+    let failuresDisplay = new Failures(document.getElementById("failures") as HTMLSpanElement);
     // button and control
     let btnSound: HTMLButtonElement = document.getElementById("btn-sound") as HTMLButtonElement;
     let btnReset: HTMLButtonElement = document.getElementById("btn-reset") as HTMLButtonElement;

@@ -1,18 +1,27 @@
 class Control {
     
-    private btnSoundEfect: HTMLButtonElement;
-    private btnReset: HTMLButtonElement;
+    private soundEnable: boolean = true;
+    private game: Game | null = null;
 
-    constructor(btnsoundEfect: HTMLButtonElement, btnReset: HTMLButtonElement) {
-        this.btnReset = btnReset;
-        this.btnSoundEfect = btnsoundEfect;
+    constructor(btnSoundEfect: HTMLButtonElement, btnReset: HTMLButtonElement) {
+        btnSoundEfect.addEventListener("click",() => {
+            console.log("sound button")
+            if (!this.soundEnable) {
+                btnSoundEfect.innerHTML = '<i class="fas fa-volume-up fa-lg"></i>'
+                this.soundEnable = false;
+            } else {
+                this.soundEnable =true;
+                btnSoundEfect.innerHTML = '<i class="fas fa-volume-off fa-lg"></i>'
+            }
+            this.game?.onSoundEfect(this.soundEnable)         
+        })
+        btnReset.addEventListener("click",() => {
+            this.game?.onReset();
+        })
     }
 
-    getBtnSoundEfect(): HTMLButtonElement {
-        return this.btnSoundEfect;
+    public setGame(game: Game){
+        this.game = game;
     }
-
-    getBtnReset(): HTMLButtonElement {
-        return this.btnReset;
-    }
+    
 }

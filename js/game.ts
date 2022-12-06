@@ -3,100 +3,91 @@ const CARD_FLIP_TRANSITION_TIME: number = 800;
 
 
 class Game {
-    private cards: HTMLCollectionOf<HTMLDivElement>;
+    private cards: Array<Card>;
     private images: Array<string>;
     private turn: number = 1;
-    private card1: HTMLDivElement | null = null;
-    private card2: HTMLDivElement | null = null;
-    private blockFlip: boolean = false;
+    private card1: Card | null = null;
+    private card2: Card | null = null;
     private timer: Timer;
     private sound: Sound;
-    private failuresCount: number = 0;
-    private failuresDisplay: HTMLSpanElement;
-    private control: Control;
-
-    constructor(cards: HTMLCollectionOf<HTMLDivElement>, images: Array<string>, timer: Timer, sound: Sound, failuresDisplay: HTMLSpanElement, control: Control) {
+    private failures: number = 0;
+    private display: Failures;
+    
+    constructor(cards: Array<Card>, images: Array<string>, timer: Timer, sound: Sound, failuresDisplay: Failures, control: Control) {
         this.cards = cards;
         this.images = shuffle(images);
         this.timer = timer;
         this.sound = sound;
-        this.failuresDisplay = failuresDisplay;
-        this.control = control;
-        this.setEvents();
+        this.display = failuresDisplay;
+        this.setEvents(control);
+        // for (let i = 0; i < this.cards.length; i++) {
+        //     this.cards[i].classList.remove("block");
+        //     this.cards[i].getElementsByClassName("img-back")[0].setAttribute("src", this.images[i]);
+        // }
+    }
+
+    private setEvents(control: Control ): void {
+        control.setGame(this)
+        // Add event listener      
         for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i].classList.remove("block");
-            this.cards[i].getElementsByClassName("img-back")[0].setAttribute("src", this.images[i]);
+            this.cards[i].setGame(this);
         }
     }
 
-    private setEvents(): void {
-        let self = this;
-        // Add event listener
-        this.control.getBtnSoundEfect().addEventListener("click", function () {
-            self.onSoundEfect();
-        });
-        this.control.getBtnReset().addEventListener("click", function () {
-            self.onReset();
-        })
-        for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i].addEventListener("click", (evt) => {
-                this.onClickCard(i);
-            });
-        }
-    }
-
-    public onClickCard(position: number): void {
+    public onClickCard(card: Card): void {
         if (this.isEndGame()) {
             console.log("End game");
             return;
         }
         this.timer.start();
-        if (this.isCardBlocked(position)) {
+        if (this.isCardBlocked(card)) {
             console.log("> Carta já retirada");
             return;
         }
-        if (this.isSelectedCard(position)) {
+
+        if (this.isSelectedCard(card)) {
             console.log("> carta já selecionado")
             return;
         }
         // flip card
-        this.cards[position].classList.add("flip");
+        card.flip();
         this.sound.play(gameEfect.flip);
-        let self: Game = this;
+       
         // wait card flip
-        setTimeout(function () {
-            if (self.turn == 1) {
-                self.card1 = self.cards[position];
-                self.turn = 2;
+        setTimeout( () =>{
+            if (this.turn == 1) {
+                this.card1 = card;
+                this.turn = 2;
+                console.log("> turn 1")
             } else {
-                self.card2 = self.cards[position];
-                self.turn = 1;
-                let img1 = self.card1?.getElementsByClassName("img-back")[0].getAttribute("src");
-                let img2 = self.card2?.getElementsByClassName("img-back")[0].getAttribute("src");
-                if (img1 == img2) {
+                console.log("> turn 2")
+                this.card2 = card;
+                this.turn = 1;
+                if (this.card1?.getImage() == this.card2.getImage()) {
                     console.log("> imagens iguais")
-                    self.card1?.classList.add("block");
-                    self.card2?.classList.add("block");
-                    self.sound.play(gameEfect.success);
+                    this.card1?.block(true);
+                    this.card2?.block(true);
+                    this.sound.play(gameEfect.success);
                 } else {
                     console.log("> imagens diferente");
-                    self.sound.play(gameEfect.flip);
-                    self.card1?.classList.remove("flip");
-                    self.card2?.classList.remove("flip");
-                    self.increaseFailures();
+                    this.sound.play(gameEfect.flip);
+                    this.card1?.unFlip()
+                    this.card2?.unFlip();
+                    this.increaseFailures();
                 }
-                self.card1 = null;
-                if (self.isEndGame()) {
-                    self.timer.pause();
+                this.card2 = null;
+                this.card1 = null;
+                if (this.isEndGame()) {
+                    this.timer.pause();
                     console.log("Fim do jogo");
                     Swal.fire(
                         {
                             "title": "Congratulations",
-                            "text": `You won in ${timeFormat(self.timer.getTime())} with ${self.failuresCount} failures`,
+                            "text": `You won in ${timeFormat(this.timer.getTime())} with ${this.failures} failures`,
                             "icon": "success",
                             "allowOutsideClick": false,
-                            "willClose": function () {
-                                self.restart();
+                            "willClose":  () => {
+                                this.restart();
                             }
                         }
                     );
@@ -116,43 +107,37 @@ class Game {
         this.shuffle();
     }
 
-    public onSoundEfect(): void {
-        if (this.sound.isEnabledSoundEfect()) {
-            this.sound.setEnabledSoundEfect(false);
-            this.control.getBtnSoundEfect().innerHTML = '<i class="fas fa-volume-off fa-lg"></i>'
-        } else {
-            this.sound.setEnabledSoundEfect(true);
-            this.control.getBtnSoundEfect().innerHTML = '<i class="fas fa-volume-up fa-lg"></i>'
-        }
+    public onSoundEfect(enabled: boolean): void {
+        this.sound.setEnabledSoundEfect(!enabled);  
     }
 
-    private isSelectedCard(position: number): boolean {
-        return this.cards[position] == this.card1;
+    private isSelectedCard(card: Card): boolean {      
+        return this.card1?.equals(card)!;
     }
 
-    private isCardBlocked(position: number): boolean {
-        return this.cards[position].classList.contains("block");
+    private isCardBlocked(card: Card): boolean {
+        return card.isBlocked();
     }
 
     private resetFailures(): void {
-        this.failuresCount = 0;
-        this.failuresDisplay.innerHTML = "0";
+        this.failures = 0;
+        this.display.setFailures(this.failures)
     }
 
     private increaseFailures(): void {
-        this.failuresCount++;
-        this.failuresDisplay.innerHTML = "" + this.failuresCount;
+        this.failures++;
+        this.display.setFailures(this.failures)
     }
 
     private showCards(): void {
         for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i].classList.add("flip");
+            this.cards[i].flip()
         }
     }
 
     private hideCards(): void {
         for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i].classList.remove("flip");
+            this.cards[i].unFlip()
         }
     }
 
@@ -165,17 +150,18 @@ class Game {
             setTimeout(() => {
                 this.images = shuffle(this.images);
                 for (let i = 0; i < this.cards.length; i++) {
-                    this.cards[i].classList.remove("block");
-                    this.cards[i].getElementsByClassName("img-back")[0].setAttribute("src", this.images[i]);
+                    this.cards[i].block(false);
+                    this.cards[i].setImage(this.images[i]);
+                    
                 }
-                //this.showCards();/* for test*/
-            }, CARD_FLIP_TRANSITION_TIME + 100);
-        }, CARD_FLIP_TRANSITION_TIME + 100);
+                // this.showCards();/* for test*/
+            }, CARD_FLIP_TRANSITION_TIME );
+        },CARD_FLIP_TRANSITION_TIME);
     }
 
     private isEndGame(): boolean {
         for (let i = 0; i < this.cards.length; i++) {
-            if (!this.cards[i].classList.contains("block")) {
+            if (!this.cards[i].isBlocked()) {
                 return false;
             }
         }

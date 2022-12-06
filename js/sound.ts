@@ -15,14 +15,14 @@ class Sound {
         this.sucessSound = sucessSound;
     }
 
-    isEnabledSoundEfect(): boolean {
+    public isEnabledSoundEfect(): boolean {
         return this.enabledSoundEfects;
     }
-    setEnabledSoundEfect(enabled: boolean): void {
+    public setEnabledSoundEfect(enabled: boolean): void {
         this.enabledSoundEfects = enabled;
     }
 
-    play(option: gameEfect): void {
+    public play(option: gameEfect): void {
         if (!this.enabledSoundEfects) {
             return;
         }
@@ -42,5 +42,3 @@ class Sound {
     }
 
 }
-
-

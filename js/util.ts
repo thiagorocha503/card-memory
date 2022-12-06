@@ -3,9 +3,10 @@ const SECONDS: number = 1000;
 const MINUTES: number = 60 * SECONDS;
 const HOURS: number = 60 * MINUTES;
 
-function buildCard(img: string) {
+function buildCard(img: string,id: number) {
     let card: HTMLElement = document.createElement("div");
     card.className = "card";
+    card.setAttribute("card-id", id.toString())
     card.insertAdjacentHTML("afterbegin",
         `
         <div class="front">       

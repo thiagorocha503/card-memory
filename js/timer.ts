@@ -1,5 +1,6 @@
 
 class Timer {
+    
     private interval: number;
     private time: number;
     private display: HTMLSpanElement;
@@ -12,43 +13,43 @@ class Timer {
         this.display = display;
     }
 
-    setTime(time: number) {
+    private setTime(time: number) {
         this.time = time;
     }
 
-    getTime(): number {
+    public getTime(): number {
         return this.time;
     }
 
-    start() {
+    public start() {
         if (isNaN(this.interval)) {
             this.beforeTime = Date.now();
-            let self: Timer = this;
-            this.interval = setInterval(() => {
-                let now = Date.now();
-                let difference = now - self.beforeTime;
-                let new_time = self.getTime() + difference;
-                self.setTime(new_time);
-                self.beforeTime = now;
-                self.clock();
-
-            }, 1000);
+            this.interval = setInterval(()=>{this.clock()}, 1000);
         }
     }
 
-    clock() {
+    private clock(){       
+        let now = Date.now();
+        let difference = now - this.beforeTime;
+        let new_time = this.getTime() + difference;
+        this.setTime(new_time);
+        this.beforeTime = now;
+        this.render();
+    }
+
+    private render() {
         this.display.innerHTML = timeFormat(this.time);
     }
 
-    pause() {
+    public pause() {
         clearInterval(this.interval);
         this.interval = NaN;
     }
 
-    reset() {
+    public reset() {
         clearInterval(this.interval);
         this.interval = NaN;
         this.time = 0;
-        this.display.innerHTML = "00:00";
+        this.render()
     }
 }

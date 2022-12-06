@@ -1,0 +1,19 @@
+{
+  "name": "card-memory-game",
+  "version": "1.0.0",
+  "description": "**Tier:** 2-Intermediate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiagorocha503/card-memory-game.git"
+  },
+  "author": "Thiago Rocha thiagorocha503@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thiagorocha503/card-memory-game/issues"
+  },
+  "homepage": "https://github.com/thiagorocha503/card-memory-game#readme"
+}
