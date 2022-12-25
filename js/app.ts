@@ -13,7 +13,8 @@ window.addEventListener("load", function () {
         IMAGE_ROOT + "flutter.png", IMAGE_ROOT + "flutter.png",
         IMAGE_ROOT + "c++.png", IMAGE_ROOT + "c++.png",
     ];
-    //img = shuffle(img);
+    // test 
+    img = shuffle(img);
     // card
     let grid: HTMLElement = document.getElementById("grid") as HTMLElement;
     let cards: Array<Card> = Array();
