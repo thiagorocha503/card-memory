@@ -130,7 +130,7 @@ class Game {
     }
 
     public onSoundEfect(enabled: boolean): void {
-        this.sound.setEnabledSoundEfect(!enabled);
+        this.sound.setEnabledSoundEfect(enabled);
     }
 
     private resetFailures(): void {

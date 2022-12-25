@@ -8,9 +8,9 @@ class Control {
             console.log("sound button")
             if (!this.soundEnable) {
                 btnSoundEfect.innerHTML = '<i class="fas fa-volume-up fa-lg"></i>'
-                this.soundEnable = false;
+                this.soundEnable = true;
             } else {
-                this.soundEnable =true;
+                this.soundEnable = false;
                 btnSoundEfect.innerHTML = '<i class="fas fa-volume-off fa-lg"></i>'
             }
             this.game?.onSoundEfect(this.soundEnable)         
