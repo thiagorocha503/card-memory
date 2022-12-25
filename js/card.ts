@@ -25,32 +25,17 @@ class Card{
         this._element.classList.remove("flip")
     }
 
-    public getImage (): string {
+    get image(): string {
         return this._element.getElementsByClassName("img-back")[0].getAttribute("src")!
     }
 
-    public setImage (src: string) {
+    set image(src: string) {
         this._element.getElementsByClassName("img-back")[0].setAttribute("src", src)
     }
-    public isBlocked(): boolean{
-        return this._element.classList.contains("block");
-    }
 
-    public block(block: boolean){
-        if(block){
-            this._element.classList.add("block");
-        } else{
-            this._element.classList.remove("block");
-
-        }
-    }
-
-    public getId(){
+    get id() {
         return this._element.getAttribute("card-id");
     }
 
-    public equals(card: Card): boolean {
-        return this.getId() == card.getId()
-    }
 
 }
