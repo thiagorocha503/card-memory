@@ -3,15 +3,15 @@ const IMAGE_ROOT = "img/";
 window.addEventListener("load", function () {
     // img src
     let img: Array<string> = [
-        IMAGE_ROOT + "c-sharp.png", IMAGE_ROOT + "c-sharp.png",
-        IMAGE_ROOT + "java.png", IMAGE_ROOT + "java.png",
-        IMAGE_ROOT + "python.png", IMAGE_ROOT + "python.png",
-        IMAGE_ROOT + "php.png", IMAGE_ROOT + "php.png",
-        IMAGE_ROOT + "swift.png", IMAGE_ROOT + "swift.png",
-        IMAGE_ROOT + "go.png", IMAGE_ROOT + "go.png",
-        IMAGE_ROOT + "js.png", IMAGE_ROOT + "js.png",
-        IMAGE_ROOT + "flutter.png", IMAGE_ROOT + "flutter.png",
-        IMAGE_ROOT + "c++.png", IMAGE_ROOT + "c++.png",
+        IMAGE_ROOT + "javascript.png", IMAGE_ROOT + "javascript.png",
+        IMAGE_ROOT + "css.png", IMAGE_ROOT + "css.png",
+        IMAGE_ROOT + "html.png", IMAGE_ROOT + "html.png",
+        IMAGE_ROOT + "bootstrap.png", IMAGE_ROOT + "bootstrap.png",
+        IMAGE_ROOT + "react.png", IMAGE_ROOT + "react.png",
+        IMAGE_ROOT + "typescript.png", IMAGE_ROOT + "typescript.png",
+        IMAGE_ROOT + "sass.png", IMAGE_ROOT + "sass.png",
+        IMAGE_ROOT + "jquery.png", IMAGE_ROOT + "jquery.png",
+        IMAGE_ROOT + "npm.png", IMAGE_ROOT + "npm.png",
     ];
     // test 
     img = shuffle(img);
